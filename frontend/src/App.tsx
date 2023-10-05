@@ -17,6 +17,16 @@ export default function App() {
     createdAt: string,
     score: number
     user: User
+    replies: Array<Replies>
+  }
+
+  type Replies = {
+    id: String
+    content: string,
+    createdAt: string,
+    replyingTo: string
+    score: number
+    user: User
   }
 
   const [comments, setComments] = useState<Array<Comment>>([])
@@ -42,6 +52,7 @@ export default function App() {
           createdAt={comment.createdAt}
           score={comment.score}
           user={comment.user}
+          replies={comment.replies}
         />
       ))}
 

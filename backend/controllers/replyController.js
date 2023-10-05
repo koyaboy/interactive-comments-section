@@ -9,27 +9,56 @@ const replyComment = async (req, res) => {
     const { commentId } = req.params
 
     if (!mongoose.Types.ObjectId.isValid(commentId)) {
-        return res.status(404).json({ error: "No such Comment" })
+        return res.status(404).json({ error: "No such Comment or Reply" })
     }
 
     //Find the comment, create the reply and add reply to comment
     try {
         const comment = await Comment.findById({ _id: commentId }).populate("user")
+        const reply = await Reply.findById({ _id: commentId }).populate("user")
+        let replyingTo = ""
 
-        const replyingTo = comment.user.username
+        if (comment) {
+            replyingTo = comment.user.username
 
-        const reply = await Reply.create({
-            content, createdAt, score, replyingTo, user
-        })
+            const newReply = await Reply.create({
+                content, createdAt, score, replyingTo, user
+            })
 
-        const replyId = reply._id
+            const replyId = newReply._id
 
-        comment.replies.push(replyId)
+            comment.replies.push(replyId)
 
-        await comment.save()
+            await comment.save()
 
-        res.status(200).json(reply)
+            res.status(200).json(newReply)
+        }
+        else if (reply) {
+            replyingTo = reply.user.username
 
+            const newReply = await Reply.create({
+                content, createdAt, score, replyingTo, user
+            })
+
+            const replyId = newReply._id
+
+            //Get original Comment
+            const comment = await Comment.findOne({ replies: commentId }).populate('user');
+
+            if (comment) {
+                comment.replies.push(replyId)
+
+                await comment.save()
+
+                res.status(200).json(newReply)
+            } else {
+                res.status(400).json({ error: "No Such Comment or Reply (Reply section)" })
+            }
+
+        }
+        else {
+            res.status(400).json({ error: "No Such Comment or Reply" })
+        }
     } catch (error) {
         res.status(400).json({ error: error.message })
     }
