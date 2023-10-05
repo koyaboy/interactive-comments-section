@@ -3,6 +3,13 @@ const Comment = require("../models/commentModel")
 const mongoose = require("mongoose")
 
 
+//GET ALL COMMENTS
+const getAllComments = async (req, res) => {
+    const comments = await Comment.find({}).sort({ createdAt: 1 }).populate("user")
+
+    res.status(200).json(comments)
+}
+
 //POST A COMMENT
 const postComment = async (req, res) => {
     const { content, createdAt, score, user } = req.body
@@ -56,6 +63,7 @@ const deleteComment = async (req, res) => {
     res.status(200).json(comment)
 }
 module.exports = {
+    getAllComments,
     postComment,
     editComment,
     deleteComment

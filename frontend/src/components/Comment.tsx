@@ -1,24 +1,34 @@
 import React from 'react'
 
-import amyrobson from "../images/avatars/image-amyrobson.png"
+type User = {
+    id: string,
+    img: string,
+    username: string
+}
 
-const Comment = () => {
+type CommentProps = {
+    key: string,
+    content: string,
+    createdAt: string,
+    score: number
+    user: User
+}
+
+const Comment = ({ key, content, createdAt, score, user }: CommentProps) => {
     return (
-        <div className='bg-white p-4'>
+        <div className='bg-white p-4 mt-3'>
             <div className='flex gap-4 items-center'>
                 <img
-                    src={amyrobson}
-                    alt="amyrobson"
+                    src={user.img}
+                    alt={user.username}
                     className='w-8'
                 />
-                <div className='text-dark-blue font-bold'>amyrobson</div>
-                <div className="text-grayish-blue ">1 month ago</div>
+                <div className='text-dark-blue font-bold'>{user.username}</div>
+                <div className="text-grayish-blue ">{createdAt}</div>
             </div>
 
             <div className='text-grayish-blue mt-4'>
-                Impressive! Though it seems the drag feature could be improved.
-                But overall it looks incredible. You've nailed the design and the
-                responsiveness at various breakpoints works really well.
+                {content}
             </div>
 
             <div className='mt-4 flex justify-between'>
@@ -32,7 +42,7 @@ const Comment = () => {
                         />
                     </svg>
 
-                    <div className='text-moderate-blue font-medium'>12</div>
+                    <div className='text-moderate-blue font-medium'>{score}</div>
 
                     <svg
                         width="11"
