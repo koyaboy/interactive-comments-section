@@ -47,6 +47,14 @@ export default function App() {
     setComment(newComment)
   }
 
+  const handleEdit = (newComment: { _id: string, content: string }) => {
+    axios.patch(`http://localhost:4000/comments/${newComment._id}`, { newComment: newComment.content })
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error))
+
+    setComment(newComment.content)
+  }
+
   const handleDelete = (_id: string) => {
     axios.delete(`http://localhost:4000/comments/${_id}`)
       .then((response) => console.log(response.data))
@@ -90,6 +98,7 @@ export default function App() {
             replies={comment.replies}
             currentUser={currentUser}
             onDelete={handleDelete}
+            onEdit={handleEdit}
           />
         </div>
       ))}

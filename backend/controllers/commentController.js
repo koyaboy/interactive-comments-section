@@ -37,7 +37,9 @@ const postComment = async (req, res) => {
 
 //EDIT COMMENT
 const editComment = async (req, res) => {
-    const { content } = req.body
+    const { newComment } = req.body
+    console.log("Request Body:", req.body);
+    console.log(newComment)
     const { commentId } = req.params
 
     if (!mongoose.Types.ObjectId.isValid(commentId)) {
@@ -45,9 +47,11 @@ const editComment = async (req, res) => {
     }
 
     try {
-        const comment = await Comment.findOneAndUpdate({ _id: commentId }, {
-            content
-        }, { new: true })
+        const comment = await Comment.findOneAndUpdate(
+            { _id: commentId },
+            { content: newComment },
+            { new: true }
+        )
 
         if (!comment) {
             return res.status(404).json({ error: "No such Comment" })
@@ -59,6 +63,7 @@ const editComment = async (req, res) => {
         res.status(400).json({ error: error.message })
     }
 }
+
 
 const deleteComment = async (req, res) => {
     const { commentId } = req.params

@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import axios from "axios"
 
 import iconDelete from "../images/icon-delete.svg"
 import iconEdit from "../images/icon-edit.svg"
+
+import AddComment from './AddComment'
 
 type User = {
     _id: string,
@@ -29,14 +31,29 @@ type CommentProps = {
     replies: Array<Replies>
     currentUser: User
     onDelete: (id: string) => void
+    onEdit: (newComment: { _id: string, content: string }) => void
 }
 
 
 
-const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, onDelete }: CommentProps) => {
+const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, onDelete, onEdit }: CommentProps) => {
+
+    const [isEditing, setisEditing] = useState<boolean>(false)
+    const [editedComment, seteditedComment] = useState<string>(content)
+
     const handleDelete = () => {
         onDelete(_id)
     }
+
+    const handleEdit = () => {
+        setisEditing(true)
+    }
+
+    const postEdit = () => {
+        onEdit({ _id, content: editedComment })
+        setisEditing(false)
+    }
+
     return (
         <>
             <div className='bg-white p-4 mt-4'>
@@ -53,9 +70,21 @@ const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, o
                     <div className="text-grayish-blue ">{createdAt}</div>
                 </div>
 
-                <div className='text-grayish-blue mt-4'>
-                    {content}
-                </div>
+
+                {isEditing ? (
+                    <textarea
+                        className='border border-light-gray px-5 py-2 w-full mt-4'
+                        value={editedComment}
+                        onChange={(e) => seteditedComment(e.target.value)}
+                    />
+                ) :
+                    (
+                        <div className='text-grayish-blue mt-4'>
+                            {content}
+                        </div>
+                    )
+                }
+
 
                 <div className='mt-4 flex justify-between'>
                     <div className='bg-very-light-gray flex gap-4 items-center px-3 py-2 rounded-lg'>
@@ -79,8 +108,15 @@ const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, o
                         </svg>
                     </div>
 
-                    {currentUser.username === user.username ?
-                        (
+                    {isEditing ? (
+                        <button
+                            className='bg-moderate-blue text-white px-6 py-2 rounded-md'
+                            onClick={postEdit}
+                        >
+                            SEND
+                        </button>
+                    ) : (
+                        currentUser.username === user.username ? (
                             <div className='flex gap-5 items-center'>
                                 <div
                                     className='flex gap-2 items-center'
@@ -90,30 +126,31 @@ const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, o
                                     <div className='text-soft-red font-medium'>Delete</div>
                                 </div>
 
-                                <div className='flex gap-2 items-center'>
+                                <div
+                                    className='flex gap-2 items-center'
+                                    onClick={handleEdit}
+                                >
                                     <img src={iconEdit} alt="icon-edit" />
                                     <div className='text-moderate-blue font-medium'>Edit</div>
                                 </div>
                             </div>
-                        )
-                        :
-                        (
-
+                        ) : (
                             <div className='flex gap-2 items-center'>
                                 <svg
                                     width="14"
                                     height="13"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M.227 4.316 5.04.16a.657.657 0 0 1 1.085.497v2.189c4.392.05 7.875.93 7.875 5.093 0 1.68-1.082 3.344-2.279 4.214-.373.272-.905-.07-.767-.51 1.24-3.964-.588-5.017-4.829-5.078v2.404c0 .566-.664.86-1.085.496L.227 5.31a.657.657 0 0 1 0-.993Z"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M.227 4.316 5.04.16a.657.657 0 0 1 1.085.497v2.189c4.392.05 7.875.93 7.875 5.093 0 1.68-1.082 3.344-2.279 4.214-.373.272-.905-.07-.767-.51 1.24-3.964-.588-5.017-4.829-5.078v2.404c0 .566-.664.86-1.085.496L.227 5.31a.657.657 0 0 1 0-.993Z"
                                         fill="#5357B6"
                                     />
                                 </svg>
-
                                 <div className='text-moderate-blue font-medium'>Reply</div>
                             </div>
                         )
+                    )}
 
-                    }
                 </div>
             </div>
 
