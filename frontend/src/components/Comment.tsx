@@ -27,7 +27,7 @@ type CommentProps = {
 const Comment = ({ key, content, createdAt, score, user, replies }: CommentProps) => {
     return (
         <>
-            <div className='bg-white p-4 mt-3'>
+            <div className='bg-white p-4 mt-4'>
                 <div className='flex gap-4 items-center'>
                     <img
                         src={user.img}
@@ -81,13 +81,16 @@ const Comment = ({ key, content, createdAt, score, user, replies }: CommentProps
 
             {/* REPLIES */}
             {replies.length !== 0 &&
-                <div className='flex gap-4'>
-
-                    <hr className='border-2 h-full border-pale-red' />
+                <div className='flex relative gap-4 mt-4'>
 
                     <div>
+                        <hr className='border-[1.6px] h-full border-light-gray' />
+                    </div>
+
+
+                    <div className='grow '>
                         {replies.map((reply) => (
-                            <div className='bg-white p-4 mt-3'>
+                            <div className='bg-white p-4 mb-3 last:mb-0'>
                                 <div className='flex gap-4 items-center'>
                                     <img
                                         src={reply.user.img}
