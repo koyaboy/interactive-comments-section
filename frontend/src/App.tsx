@@ -10,13 +10,13 @@ export default function App() {
 
 
   type User = {
-    id: string,
+    _id: string,
     img: string,
     username: string
   }
 
   type Comment = {
-    id: string,
+    _id: string,
     content: string,
     createdAt: string,
     score: number
@@ -25,7 +25,7 @@ export default function App() {
   }
 
   type Replies = {
-    id: String
+    _id: string
     content: string,
     createdAt: string,
     replyingTo: string
@@ -36,6 +36,16 @@ export default function App() {
   const currentUsername = "juliusomo"
   const [currentUser, setCurrentUser] = useState<User>()
   const [comments, setComments] = useState<Array<Comment>>([])
+  const [comment, setComment] = useState<{}>({})
+
+  const handleNewComment = (newComment: {
+    content: string,
+    createdAt: string,
+    score: number
+    user: string
+  }) => {
+    setComment(newComment)
+  }
 
   useEffect(() => {
     axios.get("http://localhost:4000/comments")
@@ -56,26 +66,33 @@ export default function App() {
         console.log(error)
       })
 
-  }, [])
+  }, [comment])
 
 
   return (
     <div className="bg-very-light-gray min-h-screen py-8 px-4">
 
       {currentUser && comments.map((comment) => (
-        <Comment
-          key={comment.id}
-          content={comment.content}
-          createdAt={comment.createdAt}
-          score={comment.score}
-          user={comment.user}
-          replies={comment.replies}
-          currentUser={currentUser}
-        />
+        <div key={comment._id} className='bg-white p-4 mt-4'>
+          <Comment
+            content={comment.content}
+            createdAt={comment.createdAt}
+            score={comment.score}
+            user={comment.user}
+            replies={comment.replies}
+            currentUser={currentUser}
+          />
+        </div>
       ))}
 
 
-      {currentUser && <AddComment currentUser={currentUser} />}
+      {currentUser && (
+        <AddComment
+          currentUser={currentUser}
+          onNewComment={handleNewComment}
+        />
+      )
+      }
 
     </div>
   )
