@@ -6,6 +6,7 @@ const cors = require('cors');
 
 const commentRoutes = require("./routes/comments")
 const replyRoutes = require("./routes/replies")
+const userRoutes = require("./routes/users")
 
 const app = express()
 
@@ -19,6 +20,7 @@ app.use((req, res, next) => {
     next()
 })
 
+app.use('/users', userRoutes)
 app.use('/comments', commentRoutes)
 app.use('/reply', replyRoutes)
 

@@ -1,5 +1,8 @@
 import React from 'react'
 
+import iconDelete from "../images/icon-delete.svg"
+import iconEdit from "../images/icon-edit.svg"
+
 type User = {
     id: string,
     img: string,
@@ -22,9 +25,10 @@ type CommentProps = {
     score: number
     user: User
     replies: Array<Replies>
+    currentUser: User
 }
 
-const Comment = ({ key, content, createdAt, score, user, replies }: CommentProps) => {
+const Comment = ({ key, content, createdAt, score, user, replies, currentUser }: CommentProps) => {
     return (
         <>
             <div className='bg-white p-4 mt-4'>
@@ -35,6 +39,9 @@ const Comment = ({ key, content, createdAt, score, user, replies }: CommentProps
                         className='w-8'
                     />
                     <div className='text-dark-blue font-bold'>{user.username}</div>
+                    {currentUser.username === user.username && (
+                        <div className='bg-moderate-blue px-2 -ml-2 rounded-md text-white'>you</div>
+                    )}
                     <div className="text-grayish-blue ">{createdAt}</div>
                 </div>
 
@@ -64,18 +71,38 @@ const Comment = ({ key, content, createdAt, score, user, replies }: CommentProps
                         </svg>
                     </div>
 
-                    <div className='flex gap-2 items-center'>
-                        <svg
-                            width="14"
-                            height="13"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path d="M.227 4.316 5.04.16a.657.657 0 0 1 1.085.497v2.189c4.392.05 7.875.93 7.875 5.093 0 1.68-1.082 3.344-2.279 4.214-.373.272-.905-.07-.767-.51 1.24-3.964-.588-5.017-4.829-5.078v2.404c0 .566-.664.86-1.085.496L.227 5.31a.657.657 0 0 1 0-.993Z"
-                                fill="#5357B6"
-                            />
-                        </svg>
+                    {currentUser.username === user.username ?
+                        (
+                            <div className='flex gap-5 items-center'>
+                                <div className='flex gap-2 items-center'>
+                                    <img src={iconDelete} alt="icon-delete" />
+                                    <div className='text-soft-red font-medium'>Delete</div>
+                                </div>
 
-                        <div className='text-moderate-blue font-medium'>Reply</div>
-                    </div>
+                                <div className='flex gap-2 items-center'>
+                                    <img src={iconEdit} alt="icon-edit" />
+                                    <div className='text-moderate-blue font-medium'>Edit</div>
+                                </div>
+                            </div>
+                        )
+                        :
+                        (
+
+                            <div className='flex gap-2 items-center'>
+                                <svg
+                                    width="14"
+                                    height="13"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M.227 4.316 5.04.16a.657.657 0 0 1 1.085.497v2.189c4.392.05 7.875.93 7.875 5.093 0 1.68-1.082 3.344-2.279 4.214-.373.272-.905-.07-.767-.51 1.24-3.964-.588-5.017-4.829-5.078v2.404c0 .566-.664.86-1.085.496L.227 5.31a.657.657 0 0 1 0-.993Z"
+                                        fill="#5357B6"
+                                    />
+                                </svg>
+
+                                <div className='text-moderate-blue font-medium'>Reply</div>
+                            </div>
+                        )
+
+                    }
                 </div>
             </div>
 
@@ -98,6 +125,9 @@ const Comment = ({ key, content, createdAt, score, user, replies }: CommentProps
                                         className='w-8'
                                     />
                                     <div className='text-dark-blue font-bold'>{reply.user.username}</div>
+                                    {currentUser.username === reply.user.username && (
+                                        <div className='bg-moderate-blue px-2 -ml-2 rounded-md text-white'>you</div>
+                                    )}
                                     <div className="text-grayish-blue ">{reply.createdAt}</div>
                                 </div>
 
@@ -127,18 +157,38 @@ const Comment = ({ key, content, createdAt, score, user, replies }: CommentProps
                                         </svg>
                                     </div>
 
-                                    <div className='flex gap-2 items-center'>
-                                        <svg
-                                            width="14"
-                                            height="13"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M.227 4.316 5.04.16a.657.657 0 0 1 1.085.497v2.189c4.392.05 7.875.93 7.875 5.093 0 1.68-1.082 3.344-2.279 4.214-.373.272-.905-.07-.767-.51 1.24-3.964-.588-5.017-4.829-5.078v2.404c0 .566-.664.86-1.085.496L.227 5.31a.657.657 0 0 1 0-.993Z"
-                                                fill="#5357B6"
-                                            />
-                                        </svg>
+                                    {currentUser.username === reply.user.username ?
+                                        (
+                                            <div className='flex gap-5 items-center'>
+                                                <div className='flex gap-2 items-center'>
+                                                    <img src={iconDelete} alt="icon-delete" />
+                                                    <div className='text-soft-red font-medium'>Delete</div>
+                                                </div>
 
-                                        <div className='text-moderate-blue font-medium'>Reply</div>
-                                    </div>
+                                                <div className='flex gap-2 items-center'>
+                                                    <img src={iconEdit} alt="icon-edit" />
+                                                    <div className='text-moderate-blue font-medium'>Edit</div>
+                                                </div>
+                                            </div>
+                                        )
+                                        :
+                                        (
+
+                                            <div className='flex gap-2 items-center'>
+                                                <svg
+                                                    width="14"
+                                                    height="13"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M.227 4.316 5.04.16a.657.657 0 0 1 1.085.497v2.189c4.392.05 7.875.93 7.875 5.093 0 1.68-1.082 3.344-2.279 4.214-.373.272-.905-.07-.767-.51 1.24-3.964-.588-5.017-4.829-5.078v2.404c0 .566-.664.86-1.085.496L.227 5.31a.657.657 0 0 1 0-.993Z"
+                                                        fill="#5357B6"
+                                                    />
+                                                </svg>
+
+                                                <div className='text-moderate-blue font-medium'>Reply</div>
+                                            </div>
+                                        )
+
+                                    }
                                 </div>
                             </div>
                         ))}
