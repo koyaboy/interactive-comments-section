@@ -47,12 +47,19 @@ export default function App() {
     setComment(newComment)
   }
 
+  const handleDelete = (_id: string) => {
+    axios.delete(`http://localhost:4000/comments/${_id}`)
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error))
+
+    comments.filter((comment) => comment._id !== _id)
+  }
+
   useEffect(() => {
     axios.get("http://localhost:4000/comments")
       .then((response) => {
         setComments(response.data)
       })
-
       .catch((error) => {
         console.log(error)
       })
@@ -66,7 +73,7 @@ export default function App() {
         console.log(error)
       })
 
-  }, [comment])
+  }, [comment, comments])
 
 
   return (
@@ -75,12 +82,14 @@ export default function App() {
       {currentUser && comments.map((comment) => (
         <div key={comment._id}>
           <Comment
+            _id={comment._id}
             content={comment.content}
             createdAt={comment.createdAt}
             score={comment.score}
             user={comment.user}
             replies={comment.replies}
             currentUser={currentUser}
+            onDelete={handleDelete}
           />
         </div>
       ))}

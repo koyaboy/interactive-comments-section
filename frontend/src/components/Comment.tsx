@@ -1,5 +1,7 @@
 import React from 'react'
 
+import axios from "axios"
+
 import iconDelete from "../images/icon-delete.svg"
 import iconEdit from "../images/icon-edit.svg"
 
@@ -19,15 +21,22 @@ type Replies = {
 }
 
 type CommentProps = {
+    _id: string,
     content: string,
     createdAt: string,
     score: number
     user: User
     replies: Array<Replies>
     currentUser: User
+    onDelete: (id: string) => void
 }
 
-const Comment = ({ content, createdAt, score, user, replies, currentUser }: CommentProps) => {
+
+
+const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, onDelete }: CommentProps) => {
+    const handleDelete = () => {
+        onDelete(_id)
+    }
     return (
         <>
             <div className='bg-white p-4 mt-4'>
@@ -73,7 +82,10 @@ const Comment = ({ content, createdAt, score, user, replies, currentUser }: Comm
                     {currentUser.username === user.username ?
                         (
                             <div className='flex gap-5 items-center'>
-                                <div className='flex gap-2 items-center'>
+                                <div
+                                    className='flex gap-2 items-center'
+                                    onClick={handleDelete}
+                                >
                                     <img src={iconDelete} alt="icon-delete" />
                                     <div className='text-soft-red font-medium'>Delete</div>
                                 </div>
@@ -161,7 +173,12 @@ const Comment = ({ content, createdAt, score, user, replies, currentUser }: Comm
                                             <div className='flex gap-5 items-center'>
                                                 <div className='flex gap-2 items-center'>
                                                     <img src={iconDelete} alt="icon-delete" />
-                                                    <div className='text-soft-red font-medium'>Delete</div>
+                                                    <div
+                                                        className='text-soft-red font-medium'
+                                                        onClick={handleDelete}
+                                                    >
+                                                        Delete
+                                                    </div>
                                                 </div>
 
                                                 <div className='flex gap-2 items-center'>
