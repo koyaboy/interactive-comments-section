@@ -73,7 +73,7 @@ export default function App() {
     <div className="bg-very-light-gray min-h-screen py-8 px-4">
 
       {currentUser && comments.map((comment) => (
-        <div key={comment._id} className='bg-white p-4 mt-4'>
+        <div key={comment._id}>
           <Comment
             content={comment.content}
             createdAt={comment.createdAt}
