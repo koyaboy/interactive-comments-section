@@ -6,7 +6,7 @@ const mongoose = require("mongoose")
 //GET ALL COMMENTS
 const getAllComments = async (req, res) => {
     const comments = await Comment.find({})
-        .sort({ createdAt: 1 })
+        .sort({ score: -1 })
         .populate({
             path: 'replies',
             populate: {

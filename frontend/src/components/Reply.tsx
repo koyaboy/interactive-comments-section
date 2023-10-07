@@ -5,6 +5,8 @@ import axios from "axios"
 import iconDelete from "../images/icon-delete.svg"
 import iconEdit from "../images/icon-edit.svg"
 
+import AddComment from './AddComment'
+
 type User = {
     _id: string,
     img: string,
@@ -19,18 +21,18 @@ type replyProps = {
     replyingTo: string
     user: User
     currentUser: User
-    onReply: (id: string) => void
+    onDeleteReply: (id: string) => void
+    onReply: () => void
 }
 
-const Reply = ({ _id, content, createdAt, score, replyingTo, user, currentUser, onReply }: replyProps) => {
+const Reply = ({ _id, content, createdAt, score, replyingTo, user, currentUser, onDeleteReply, onReply }: replyProps) => {
 
     const [isEditing, setisEditing] = useState<boolean>(false)
     const [editedReply, setEditedReply] = useState<string>(content)
+    const [isReplying, setIsReplying] = useState<boolean>(false)
 
     const handleDelete = () => {
-        axios.delete(`http://localhost:4000/reply/${_id}`)
-            .then((response) => console.log(response.data))
-            .catch((error) => console.log(error))
+        onDeleteReply(_id)
     }
 
     const handleEdit = () => {
@@ -47,7 +49,7 @@ const Reply = ({ _id, content, createdAt, score, replyingTo, user, currentUser, 
     }
 
     const handleReply = () => {
-        onReply(_id)
+        onReply()
     }
 
     return (
@@ -106,7 +108,7 @@ const Reply = ({ _id, content, createdAt, score, replyingTo, user, currentUser, 
                         className='bg-moderate-blue text-white px-6 py-2 rounded-md'
                         onClick={postEdit}
                     >
-                        SEND
+                        UPDATE
                     </button>
                 ) : (
                     currentUser.username === user.username ? (
@@ -150,6 +152,15 @@ const Reply = ({ _id, content, createdAt, score, replyingTo, user, currentUser, 
                     )
                 )}
             </div>
+
+            {/* {isReplying &&
+                <AddComment
+                    currentUser={currentUser}
+                    isReplying={isReplying}
+                    setIsReplying={setIsReplying}
+                    commentId={_id}
+                />
+            } */}
         </>
     )
 }

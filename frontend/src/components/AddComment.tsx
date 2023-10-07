@@ -11,19 +11,19 @@ type User = {
 
 type AddCommentProps = {
     currentUser: User
-    onNewComment: (comment: {
-        content: string,
-        createdAt: string,
-        score: number
-        user: string
-    }) => void
+    // onNewComment: (comment: {
+    //     content: string,
+    //     createdAt: string,
+    //     score: number
+    //     user: string
+    // }) => void
 
     isReplying: boolean
     commentId: string
     setIsReplying: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const AddComment = ({ currentUser, onNewComment, isReplying, setIsReplying, commentId }: AddCommentProps) => {
+const AddComment = ({ currentUser, isReplying, setIsReplying, commentId }: AddCommentProps) => {
 
     const [comment, setComment] = useState<string>("")
 
@@ -38,7 +38,6 @@ const AddComment = ({ currentUser, onNewComment, isReplying, setIsReplying, comm
         axios.post("http://localhost:4000/comments", newComment)
             .then((response) => {
                 console.log(response.data);
-                onNewComment(newComment)
                 setComment("")
             })
 
@@ -56,7 +55,6 @@ const AddComment = ({ currentUser, onNewComment, isReplying, setIsReplying, comm
         axios.post(`http://localhost:4000/reply/${commentId}`, newReply)
             .then((response) => {
                 console.log(response.data);
-                onNewComment(newReply)
                 setComment("")
             })
 
@@ -69,7 +67,7 @@ const AddComment = ({ currentUser, onNewComment, isReplying, setIsReplying, comm
     return (
         <div className='bg-white p-4 mt-4 rounded-lg'>
             <textarea
-                placeholder={isReplying ? 'Add a reply...' : 'Add a comment...'}
+                placeholder='Add a comment...'
                 className='border border-light-gray px-5 py-2 w-full'
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
@@ -86,7 +84,7 @@ const AddComment = ({ currentUser, onNewComment, isReplying, setIsReplying, comm
                     className='bg-moderate-blue text-white px-6 py-2 rounded-md'
                     onClick={isReplying ? postNewReply : postNewComment}
                 >
-                    SEND
+                    {isReplying ? "REPLY" : "SEND"}
                 </button>
             </div>
         </div>

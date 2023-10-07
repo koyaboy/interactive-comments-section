@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react"
 import Comment from "./components/Comment"
 import AddComment from "./components/AddComment";
+import DeleteModal from "./components/DeleteModal"
 
 import axios from 'axios';
-import { log } from "console";
 
 export default function App() {
-
-
 
   type User = {
     _id: string,
@@ -39,6 +37,8 @@ export default function App() {
   const [comment, setComment] = useState<{}>({})
   const [isReplying, setIsReplying] = useState<boolean>(false)
   const [commentId, setCommentId] = useState<string>('')
+  const [replyId, setReplyId] = useState<string>('')
+  const [shouldDelete, setShouldDelete] = useState<boolean>(false)
 
   useEffect(() => {
     axios.get("http://localhost:4000/comments")
@@ -61,15 +61,6 @@ export default function App() {
   }, [comment, comments])
 
 
-  const handleNewComment = (newComment: {
-    content: string,
-    createdAt: string,
-    score: number
-    user: string
-  }) => {
-    setComment(newComment)
-  }
-
   const handleEdit = (newComment: { _id: string, content: string }) => {
     axios.patch(`http://localhost:4000/comments/${newComment._id}`, { newComment: newComment.content })
       .then((response) => console.log(response))
@@ -79,78 +70,67 @@ export default function App() {
   }
 
   const handleDelete = (_id: string) => {
-    axios.delete(`http://localhost:4000/comments/${_id}`)
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error))
-
-    comments.filter((comment) => comment._id !== _id)
+    setCommentId(_id)
+    setShouldDelete(true)
   }
 
-  const handleReply = (commentId: string) => {
-    setCommentId(commentId)
-    setIsReplying(true)
 
-
-    const delay = 50; // Adjust this value as needed
-
-    setTimeout(() => {
-      // Scroll to the bottom of the page
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: 'smooth'
-      });
-    }, delay);
-  }
-
-  const handleReplyToAnotherReply = (replyId: string) => {
-    setCommentId(replyId)
-    setIsReplying(true)
-
-    const delay = 50; // Adjust this value as needed
-
-    setTimeout(() => {
-      // Scroll to the bottom of the page
-      window.scrollTo({
-        top: document.body.scrollHeight,
-        behavior: 'smooth'
-      });
-    }, delay);
+  const handleDeleteReply = (replyId: string) => {
+    setReplyId(replyId)
+    setShouldDelete(true)
   }
 
   return (
-    <div className="bg-very-light-gray min-h-screen py-8 px-4">
 
-      {currentUser && comments.map((comment) => (
-        <div key={comment._id}>
-          <Comment
-            _id={comment._id}
-            content={comment.content}
-            createdAt={comment.createdAt}
-            score={comment.score}
-            user={comment.user}
-            replies={comment.replies}
-            currentUser={currentUser}
-            onDelete={handleDelete}
-            onEdit={handleEdit}
-            onReply={handleReply}
-            onReplyToAnotherReply={handleReplyToAnotherReply}
+    <>
+      {shouldDelete && <div className="overlay"></div>}
+
+      <div className="bg-very-light-gray min-h-screen py-8 px-4">
+
+        {currentUser && comments.map((comment) => (
+          <div key={comment._id}>
+            <Comment
+              _id={comment._id}
+              content={comment.content}
+              createdAt={comment.createdAt}
+              score={comment.score}
+              user={comment.user}
+              replies={comment.replies}
+              currentUser={currentUser}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              shouldDelete={shouldDelete}
+              onDeleteReply={handleDeleteReply}
+            />
+          </div>
+        ))}
+
+
+        {shouldDelete &&
+          <DeleteModal
+            commentId={commentId}
+            replyId={replyId}
+            setShouldDelete={setShouldDelete}
+            setCommentId={setCommentId}
+            setReplyId={setReplyId}
           />
-        </div>
-      ))}
 
 
-      {currentUser && (
-        <AddComment
-          currentUser={currentUser}
-          onNewComment={handleNewComment}
-          commentId={commentId}
-          isReplying={isReplying}
-          setIsReplying={setIsReplying}
+        }
 
-        />
-      )
-      }
 
-    </div>
+
+        {currentUser && (
+          <AddComment
+            currentUser={currentUser}
+            commentId={commentId}
+            isReplying={isReplying}
+            setIsReplying={setIsReplying}
+          />
+        )
+        }
+
+      </div>
+    </>
   )
 }

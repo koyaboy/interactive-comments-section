@@ -5,8 +5,8 @@ import axios from "axios"
 import iconDelete from "../images/icon-delete.svg"
 import iconEdit from "../images/icon-edit.svg"
 
-import AddComment from './AddComment'
 import Reply from "./Reply"
+import AddComment from './AddComment'
 
 type User = {
     _id: string,
@@ -33,18 +33,21 @@ type CommentProps = {
     currentUser: User
     onDelete: (id: string) => void
     onEdit: (newComment: { _id: string, content: string }) => void
-    onReply: (commentId: string) => void
-    onReplyToAnotherReply: (replyId: string) => void
+    shouldDelete: boolean
+    onDeleteReply: (id: string) => void
 
 }
 
 
 
 
-const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, onDelete, onEdit, onReply, onReplyToAnotherReply }: CommentProps) => {
+const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, onDelete, onEdit,
+    shouldDelete, onDeleteReply }: CommentProps) => {
 
     const [isEditing, setisEditing] = useState<boolean>(false)
     const [editedComment, seteditedComment] = useState<string>(content)
+    const [isReplyingComment, setIsReplyingComment] = useState<boolean>(false)
+    const [isReplyingReply, setIsReplyingReply] = useState<boolean>(false)
 
     const handleDelete = () => {
         onDelete(_id)
@@ -60,11 +63,15 @@ const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, o
     }
 
     const handleReply = () => {
-        onReply(_id)
+        setIsReplyingComment(true)
     }
 
-    const handleReplyToAnotherReply = (id: string) => {
-        onReplyToAnotherReply(id)
+    const handleReplyToAnotherReply = () => {
+        setIsReplyingReply(true)
+    }
+
+    const handleDeleteReply = (id: string) => {
+        onDeleteReply(id)
     }
 
     return (
@@ -126,7 +133,7 @@ const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, o
                             className='bg-moderate-blue text-white px-6 py-2 rounded-md'
                             onClick={postEdit}
                         >
-                            SEND
+                            UPDATE
                         </button>
                     ) : (
                         currentUser.username === user.username ? (
@@ -172,6 +179,16 @@ const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, o
                 </div>
             </div>
 
+            {isReplyingComment &&
+                <AddComment
+                    currentUser={currentUser}
+                    isReplying={isReplyingComment}
+                    setIsReplying={setIsReplyingComment}
+                    commentId={_id}
+                />
+            }
+
+
             {/* REPLIES */}
 
             {replies.length !== 0 &&
@@ -182,19 +199,35 @@ const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, o
 
                     <div className='grow '>
                         {replies.map((reply) => (
-                            <div key={reply._id} className='bg-white p-4 mb-3 last:mb-0'>
-                                <Reply
-                                    _id={reply._id}
-                                    content={reply.content}
-                                    createdAt={reply.createdAt}
-                                    score={reply.score}
-                                    replyingTo={reply.replyingTo}
-                                    user={reply.user}
-                                    currentUser={currentUser}
-                                    onReply={handleReplyToAnotherReply}
-                                />
-                            </div>
+                            <>
+                                <div key={reply._id} className='bg-white p-4 mb-3 last:mb-0'>
+                                    <Reply
+                                        _id={reply._id}
+                                        content={reply.content}
+                                        createdAt={reply.createdAt}
+                                        score={reply.score}
+                                        replyingTo={reply.replyingTo}
+                                        user={reply.user}
+                                        currentUser={currentUser}
+                                        onDeleteReply={handleDeleteReply}
+                                        onReply={handleReplyToAnotherReply}
+                                    />
+                                </div>
+
+                                {/* Add comment  */}
+                                {isReplyingReply &&
+                                    <AddComment
+                                        currentUser={currentUser}
+                                        isReplying={isReplyingReply}
+                                        setIsReplying={setIsReplyingReply}
+                                        commentId={reply._id}
+                                    />
+                                }
+                            </>
                         ))}
+
+
+
                     </div>
                 </div>}
 
