@@ -89,11 +89,32 @@ export default function App() {
   const handleReply = (commentId: string) => {
     setCommentId(commentId)
     setIsReplying(true)
+
+
+    const delay = 50; // Adjust this value as needed
+
+    setTimeout(() => {
+      // Scroll to the bottom of the page
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+      });
+    }, delay);
   }
 
   const handleReplyToAnotherReply = (replyId: string) => {
     setCommentId(replyId)
     setIsReplying(true)
+
+    const delay = 50; // Adjust this value as needed
+
+    setTimeout(() => {
+      // Scroll to the bottom of the page
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+      });
+    }, delay);
   }
 
   return (
