@@ -34,11 +34,14 @@ type CommentProps = {
     onDelete: (id: string) => void
     onEdit: (newComment: { _id: string, content: string }) => void
     onReply: (commentId: string) => void
+    onReplyToAnotherReply: (replyId: string) => void
+
 }
 
 
 
-const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, onDelete, onEdit, onReply }: CommentProps) => {
+
+const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, onDelete, onEdit, onReply, onReplyToAnotherReply }: CommentProps) => {
 
     const [isEditing, setisEditing] = useState<boolean>(false)
     const [editedComment, seteditedComment] = useState<string>(content)
@@ -58,6 +61,10 @@ const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, o
 
     const handleReply = () => {
         onReply(_id)
+    }
+
+    const handleReplyToAnotherReply = (id: string) => {
+        onReplyToAnotherReply(id)
     }
 
     return (
@@ -184,6 +191,7 @@ const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, o
                                     replyingTo={reply.replyingTo}
                                     user={reply.user}
                                     currentUser={currentUser}
+                                    onReply={handleReplyToAnotherReply}
                                 />
                             </div>
                         ))}

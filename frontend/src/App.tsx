@@ -86,8 +86,13 @@ export default function App() {
     comments.filter((comment) => comment._id !== _id)
   }
 
-  const handleReply = (id: string) => {
-    setCommentId(id)
+  const handleReply = (commentId: string) => {
+    setCommentId(commentId)
+    setIsReplying(true)
+  }
+
+  const handleReplyToAnotherReply = (replyId: string) => {
+    setCommentId(replyId)
     setIsReplying(true)
   }
 
@@ -107,6 +112,7 @@ export default function App() {
             onDelete={handleDelete}
             onEdit={handleEdit}
             onReply={handleReply}
+            onReplyToAnotherReply={handleReplyToAnotherReply}
           />
         </div>
       ))}

@@ -19,9 +19,10 @@ type replyProps = {
     replyingTo: string
     user: User
     currentUser: User
+    onReply: (id: string) => void
 }
 
-const Reply = ({ _id, content, createdAt, score, replyingTo, user, currentUser }: replyProps) => {
+const Reply = ({ _id, content, createdAt, score, replyingTo, user, currentUser, onReply }: replyProps) => {
 
     const [isEditing, setisEditing] = useState<boolean>(false)
     const [editedReply, setEditedReply] = useState<string>(content)
@@ -43,6 +44,10 @@ const Reply = ({ _id, content, createdAt, score, replyingTo, user, currentUser }
                 setisEditing(false)
             })
             .catch((error) => console.log(error))
+    }
+
+    const handleReply = () => {
+        onReply(_id)
     }
 
     return (
@@ -134,7 +139,11 @@ const Reply = ({ _id, content, createdAt, score, replyingTo, user, currentUser }
                                     fill="#5357B6"
                                 />
                             </svg>
-                            <div>
+
+                            <div
+                                className='text-moderate-blue font-medium'
+                                onClick={handleReply}
+                            >
                                 Reply
                             </div>
                         </div>
