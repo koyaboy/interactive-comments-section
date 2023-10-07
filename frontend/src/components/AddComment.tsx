@@ -17,9 +17,13 @@ type AddCommentProps = {
         score: number
         user: string
     }) => void
+
+    isReplying: boolean
+    commentId: string
+    setIsReplying: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const AddComment = ({ currentUser, onNewComment }: AddCommentProps) => {
+const AddComment = ({ currentUser, onNewComment, isReplying, setIsReplying, commentId }: AddCommentProps) => {
 
     const [comment, setComment] = useState<string>("")
 
@@ -41,11 +45,31 @@ const AddComment = ({ currentUser, onNewComment }: AddCommentProps) => {
             .catch((error) => { console.log(error) })
     }
 
+    const postNewReply = () => {
+        const newReply = {
+            content: comment,
+            createdAt: "Just Now",
+            score: 0,
+            user: currentUser._id
+        }
+
+        axios.post(`http://localhost:4000/reply/${commentId}`, newReply)
+            .then((response) => {
+                console.log(response.data);
+                onNewComment(newReply)
+                setComment("")
+            })
+
+            .catch((error) => { console.log(error) })
+
+        setIsReplying(false)
+    }
+
 
     return (
         <div className='bg-white p-4 mt-4 rounded-lg'>
             <textarea
-                placeholder='Add a comment...'
+                placeholder={isReplying ? 'Add a reply...' : 'Add a comment...'}
                 className='border border-light-gray px-5 py-2 w-full'
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
@@ -60,7 +84,7 @@ const AddComment = ({ currentUser, onNewComment }: AddCommentProps) => {
 
                 <button
                     className='bg-moderate-blue text-white px-6 py-2 rounded-md'
-                    onClick={postNewComment}
+                    onClick={isReplying ? postNewReply : postNewComment}
                 >
                     SEND
                 </button>

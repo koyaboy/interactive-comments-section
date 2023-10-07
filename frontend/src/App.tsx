@@ -37,6 +37,29 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<User>()
   const [comments, setComments] = useState<Array<Comment>>([])
   const [comment, setComment] = useState<{}>({})
+  const [isReplying, setIsReplying] = useState<boolean>(false)
+  const [commentId, setCommentId] = useState<string>('')
+
+  useEffect(() => {
+    axios.get("http://localhost:4000/comments")
+      .then((response) => {
+        setComments(response.data)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+
+    axios.get(`http://localhost:4000/users/${currentUsername}`)
+      .then((response) => {
+        setCurrentUser(response.data)
+      })
+
+      .catch((error) => {
+        console.log(error)
+      })
+
+  }, [comment, comments])
+
 
   const handleNewComment = (newComment: {
     content: string,
@@ -63,26 +86,10 @@ export default function App() {
     comments.filter((comment) => comment._id !== _id)
   }
 
-  useEffect(() => {
-    axios.get("http://localhost:4000/comments")
-      .then((response) => {
-        setComments(response.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-
-    axios.get(`http://localhost:4000/users/${currentUsername}`)
-      .then((response) => {
-        setCurrentUser(response.data)
-      })
-
-      .catch((error) => {
-        console.log(error)
-      })
-
-  }, [comment, comments])
-
+  const handleReply = (id: string) => {
+    setCommentId(id)
+    setIsReplying(true)
+  }
 
   return (
     <div className="bg-very-light-gray min-h-screen py-8 px-4">
@@ -99,6 +106,7 @@ export default function App() {
             currentUser={currentUser}
             onDelete={handleDelete}
             onEdit={handleEdit}
+            onReply={handleReply}
           />
         </div>
       ))}
@@ -108,6 +116,10 @@ export default function App() {
         <AddComment
           currentUser={currentUser}
           onNewComment={handleNewComment}
+          commentId={commentId}
+          isReplying={isReplying}
+          setIsReplying={setIsReplying}
+
         />
       )
       }
