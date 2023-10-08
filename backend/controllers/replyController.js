@@ -89,6 +89,40 @@ const editReply = async (req, res) => {
     }
 }
 
+//UPVOTE REPLY
+const upvoteReply = async (req, res) => {
+    const { replyId } = req.params
+
+    const reply = await Reply.findById({ _id: replyId })
+
+    if (!reply) {
+        res.status(400).json({ error: "No such Reply" })
+    }
+
+    reply.score += 1
+
+    await reply.save()
+
+    res.status(200).json(reply)
+}
+
+//DOWNVOTE REPLY
+const downvoteReply = async (req, res) => {
+    const { replyId } = req.params
+
+    const reply = await Reply.findById({ _id: replyId })
+
+    if (!reply) {
+        res.status(400).json({ error: "No such Reply" })
+    }
+
+    reply.score -= 1
+
+    await reply.save()
+
+    res.status(200).json(reply)
+}
+
 const deleteReply = async (req, res) => {
     const { replyId } = req.params
 
@@ -104,5 +138,7 @@ const deleteReply = async (req, res) => {
 module.exports = {
     replyComment,
     editReply,
+    upvoteReply,
+    downvoteReply,
     deleteReply
 }

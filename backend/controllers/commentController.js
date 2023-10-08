@@ -64,7 +64,41 @@ const editComment = async (req, res) => {
     }
 }
 
+//UPVOTE COMMENT
+const upvoteComment = async (req, res) => {
+    const { commentId } = req.params
 
+    const comment = await Comment.findById({ _id: commentId })
+
+    if (!comment) {
+        res.status(400).json({ error: "No such Comment" })
+    }
+
+    comment.score += 1
+
+    await comment.save()
+
+    res.status(200).json(comment)
+}
+
+//DOWNVOTE COMMENT
+const downvoteComment = async (req, res) => {
+    const { commentId } = req.params
+
+    const comment = await Comment.findById({ _id: commentId })
+
+    if (!comment) {
+        res.status(400).json({ error: "No such Comment" })
+    }
+
+    comment.score -= 1
+
+    await comment.save()
+
+    res.status(200).json(comment)
+}
+
+//DELETE COMMENT
 const deleteComment = async (req, res) => {
     const { commentId } = req.params
 
@@ -80,5 +114,7 @@ module.exports = {
     getAllComments,
     postComment,
     editComment,
+    upvoteComment,
+    downvoteComment,
     deleteComment
 }
