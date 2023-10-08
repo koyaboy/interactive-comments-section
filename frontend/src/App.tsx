@@ -85,7 +85,7 @@ export default function App() {
     <>
       {shouldDelete && <div className="overlay"></div>}
 
-      <div className="bg-very-light-gray min-h-screen py-8 px-4">
+      <div className="bg-very-light-gray min-h-screen py-8 px-4 sm:px-16 md:px-36 lg:px-48 xl:px-64">
 
         {currentUser && comments.map((comment) => (
           <div key={comment._id}>
@@ -106,17 +106,17 @@ export default function App() {
         ))}
 
 
-        {shouldDelete &&
-          <DeleteModal
-            commentId={commentId}
-            replyId={replyId}
-            setShouldDelete={setShouldDelete}
-            setCommentId={setCommentId}
-            setReplyId={setReplyId}
-          />
-
-
-        }
+        <div className="w-full bg-red-500">
+          {shouldDelete &&
+            <DeleteModal
+              commentId={commentId}
+              replyId={replyId}
+              setShouldDelete={setShouldDelete}
+              setCommentId={setCommentId}
+              setReplyId={setReplyId}
+            />
+          }
+        </div>
 
 
 

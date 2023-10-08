@@ -46,7 +46,7 @@ const DeleteModal = ({ commentId, replyId, setShouldDelete, setCommentId, setRep
 
     return (
         <>
-            <div className='bg-white absolute top-[65%] p-5 z-10 rounded-md mr-4'>
+            <div className='bg-white absolute top-[65%] p-5 z-10 rounded-md mr-4 sm:mr-16 md:mr-36 lg:w-[30%] lg:ml-[20%]'>
                 <h2 className="text-dark-blue font-medium">Delete comment</h2>
                 <p className='text-grayish-blue mt-3'>
                     Are you sure you want to delete this comment?
