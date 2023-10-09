@@ -11,10 +11,7 @@ const userRoutes = require("./routes/users")
 const app = express()
 
 //middleware
-app.use(cors({
-    origin: "*",
-    methods: ["POST", "GET", "PATCH", "DELETE"],
-}))
+app.use(cors())
 
 app.use(express.json())
 
