@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState, Suspense } from "react"
 import Comment from "./components/Comment"
 import AddComment from "./components/AddComment";
-import DeleteModal from "./components/DeleteModal"
+
+const DeleteModal = React.lazy(() => import('./components/DeleteModal'));
 
 import axios from 'axios';
 
@@ -108,13 +109,15 @@ export default function App() {
 
         <div className="w-full">
           {shouldDelete &&
-            <DeleteModal
-              commentId={commentId}
-              replyId={replyId}
-              setShouldDelete={setShouldDelete}
-              setCommentId={setCommentId}
-              setReplyId={setReplyId}
-            />
+            <Suspense fallback={<div>Loading...</div>}>
+              <DeleteModal
+                commentId={commentId}
+                replyId={replyId}
+                setShouldDelete={setShouldDelete}
+                setCommentId={setCommentId}
+                setReplyId={setReplyId}
+              />
+            </Suspense>
           }
         </div>
 
