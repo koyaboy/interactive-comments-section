@@ -62,7 +62,7 @@ export default function App() {
 
 
   const handleEdit = (newComment: { _id: string, content: string }) => {
-    axios.patch(`http://localhost:4000/comments/${newComment._id}`, { newComment: newComment.content })
+    axios.patch(`https://interactive-comments-section-api-an2t.onrender.com/comments/${newComment._id}`, { newComment: newComment.content })
       .then((response) => console.log(response))
       .catch((error) => console.log(error))
 

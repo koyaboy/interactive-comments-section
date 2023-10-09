@@ -88,13 +88,13 @@ const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, o
     }
 
     const handleUpvote = () => {
-        axios.patch(`http://localhost:4000/comments/upvote/${_id}`)
+        axios.patch(`https://interactive-comments-section-api-an2t.onrender.com/upvote/${_id}`)
             .then((response) => console.log(response.data))
             .catch((error) => console.log(error))
     }
 
     const handleDownvote = () => {
-        axios.patch(`http://localhost:4000/comments/downvote/${_id}`)
+        axios.patch(`https://interactive-comments-section-api-an2t.onrender.com/downvote/${_id}`)
             .then((response) => console.log(response.data))
             .catch((error) => console.log(error))
     }

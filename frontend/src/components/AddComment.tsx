@@ -11,13 +11,6 @@ type User = {
 
 type AddCommentProps = {
     currentUser: User
-    // onNewComment: (comment: {
-    //     content: string,
-    //     createdAt: string,
-    //     score: number
-    //     user: string
-    // }) => void
-
     isReplying: boolean
     commentId: string
     setIsReplying: React.Dispatch<React.SetStateAction<boolean>>
@@ -35,7 +28,7 @@ const AddComment = ({ currentUser, isReplying, setIsReplying, commentId }: AddCo
             user: currentUser._id
         }
 
-        axios.post("http://localhost:4000/comments", newComment)
+        axios.post("https://interactive-comments-section-api-an2t.onrender.com/comments", newComment)
             .then((response) => {
                 console.log(response.data);
                 setComment("")
@@ -52,7 +45,7 @@ const AddComment = ({ currentUser, isReplying, setIsReplying, commentId }: AddCo
             user: currentUser._id
         }
 
-        axios.post(`http://localhost:4000/reply/${commentId}`, newReply)
+        axios.post(`https://interactive-comments-section-api-an2t.onrender.com/reply/${commentId}`, newReply)
             .then((response) => {
                 console.log(response.data);
                 setComment("")

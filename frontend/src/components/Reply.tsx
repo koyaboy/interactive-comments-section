@@ -39,7 +39,7 @@ const Reply = ({ _id, content, createdAt, score, replyingTo, user, currentUser, 
     }
 
     const postEdit = () => {
-        axios.patch(`http://localhost:4000/reply/${_id}`, { content: editedReply })
+        axios.patch(`https://interactive-comments-section-api-an2t.onrender.com/reply/${_id}`, { content: editedReply })
             .then((response) => {
                 console.log(response.data)
                 setisEditing(false)
@@ -52,13 +52,13 @@ const Reply = ({ _id, content, createdAt, score, replyingTo, user, currentUser, 
     }
 
     const handleUpvote = () => {
-        axios.patch(`http://localhost:4000/reply/upvote/${_id}`)
+        axios.patch(`https://interactive-comments-section-api-an2t.onrender.com/reply/upvote/${_id}`)
             .then((response) => console.log(response.data))
             .catch((error) => console.log(error))
     }
 
     const handleDownvote = () => {
-        axios.patch(`http://localhost:4000/reply/downvote/${_id}`)
+        axios.patch(`https://interactive-comments-section-api-an2t.onrender.com/reply/downvote/${_id}`)
             .then((response) => console.log(response.data))
             .catch((error) => console.log(error))
     }

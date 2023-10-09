@@ -21,7 +21,7 @@ const DeleteModal = ({ commentId, replyId, setShouldDelete, setCommentId, setRep
 
     const handleDelete = () => {
         if (commentId) {
-            axios.delete(`http://localhost:4000/comments/${commentId}`)
+            axios.delete(`https://interactive-comments-section-api-an2t.onrender.com/comments/${commentId}`)
                 .then((response) => {
                     console.log(response.data)
                     setShouldDelete(false)
@@ -32,7 +32,7 @@ const DeleteModal = ({ commentId, replyId, setShouldDelete, setCommentId, setRep
         }
 
         else if (replyId) {
-            axios.delete(`http://localhost:4000/reply/${replyId}`)
+            axios.delete(`https://interactive-comments-section-api-an2t.onrender.com/reply/${replyId}`)
                 .then((response) => {
                     console.log(response.data)
                     setShouldDelete(false)
