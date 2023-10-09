@@ -74,7 +74,7 @@ const Reply = ({ _id, content, createdAt, score, replyingTo, user, currentUser, 
                         <img
                             src={user.img}
                             alt={user.username}
-                            className='w-8'
+                            className='w-8 h-8'
                         />
                         <div className='text-dark-blue font-bold'>{user.username}</div>
                         {currentUser.username === user.username && (

@@ -106,7 +106,7 @@ export default function App() {
         ))}
 
 
-        <div className="w-full bg-red-500">
+        <div className="w-full">
           {shouldDelete &&
             <DeleteModal
               commentId={commentId}
