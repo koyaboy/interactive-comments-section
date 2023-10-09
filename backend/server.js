@@ -24,6 +24,10 @@ app.use('/users', userRoutes)
 app.use('/comments', commentRoutes)
 app.use('/reply', replyRoutes)
 
+app.get("/", () => {
+    res.json("Hello")
+})
+
 //connect to db
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
