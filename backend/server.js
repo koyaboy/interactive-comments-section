@@ -24,7 +24,7 @@ app.use('/users', userRoutes)
 app.use('/comments', commentRoutes)
 app.use('/reply', replyRoutes)
 
-app.get("/", () => {
+app.get("/", (req, res) => {
     res.json("Hello")
 })
 
