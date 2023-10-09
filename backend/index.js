@@ -12,7 +12,7 @@ const app = express()
 
 //middleware
 app.use(cors({
-    origin: ["https://interactive-comments-section-fm.vercel.app"],
+    origin: "*",
     methods: ["POST", "GET", "PATCH", "DELETE"],
 }))
 
