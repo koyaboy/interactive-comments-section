@@ -11,7 +11,10 @@ const userRoutes = require("./routes/users")
 const app = express()
 
 //middleware
-app.use(cors())
+app.use(cors({
+    origin: "https://interactive-comments-section-api-two.vercel.app",
+    credentials: true
+}))
 
 app.use(express.json())
 
