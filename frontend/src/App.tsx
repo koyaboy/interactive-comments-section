@@ -41,7 +41,7 @@ export default function App() {
   const [shouldDelete, setShouldDelete] = useState<boolean>(false)
 
   useEffect(() => {
-    axios.get("http://localhost:4000/comments")
+    axios.get("https://interactive-comments-section-api-two.vercel.app/comments")
       .then((response) => {
         setComments(response.data)
       })
@@ -49,7 +49,7 @@ export default function App() {
         console.log(error)
       })
 
-    axios.get(`http://localhost:4000/users/${currentUsername}`)
+    axios.get(`https://interactive-comments-section-api-two.vercel.app/users/${currentUsername}`)
       .then((response) => {
         setCurrentUser(response.data)
       })
