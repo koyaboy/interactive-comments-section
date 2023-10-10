@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, Suspense } from 'react'
 import axios from "axios"
 
 import Reply from "./Reply"
-import AddComment from './AddComment'
+
+const AddComment = React.lazy(() => import('./AddComment'))
 
 type User = {
     _id: string,
@@ -236,12 +237,14 @@ const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, o
 
             <div ref={newCommentRef}>
                 {isReplyingComment &&
-                    <AddComment
-                        currentUser={currentUser}
-                        isReplying={isReplyingComment}
-                        setIsReplying={setIsReplyingComment}
-                        commentId={_id}
-                    />
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <AddComment
+                            currentUser={currentUser}
+                            isReplying={isReplyingComment}
+                            setIsReplying={setIsReplyingComment}
+                            commentId={_id}
+                        />
+                    </Suspense>
                 }
             </div>
 
@@ -275,12 +278,14 @@ const Comment = ({ _id, content, createdAt, score, user, replies, currentUser, o
 
                         <div ref={newReplyRef}>
                             {isReplyingReply &&
-                                <AddComment
-                                    currentUser={currentUser}
-                                    isReplying={isReplyingReply}
-                                    setIsReplying={setIsReplyingReply}
-                                    commentId={replyId}
-                                />
+                                <Suspense fallback={<div>Loading...</div>}>
+                                    <AddComment
+                                        currentUser={currentUser}
+                                        isReplying={isReplyingReply}
+                                        setIsReplying={setIsReplyingReply}
+                                        commentId={replyId}
+                                    />
+                                </Suspense>
                             }
                         </div>
 
