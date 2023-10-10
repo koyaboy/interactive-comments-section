@@ -1,10 +1,9 @@
 import React, { useEffect, useState, Suspense } from "react"
 import Comment from "./components/Comment"
 import AddComment from "./components/AddComment";
+import axios from 'axios';
 
 const DeleteModal = React.lazy(() => import('./components/DeleteModal'));
-
-import axios from 'axios';
 
 export default function App() {
 

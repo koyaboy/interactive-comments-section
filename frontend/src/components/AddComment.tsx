@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import axios from "axios"
 
 
@@ -72,7 +72,7 @@ const AddComment = ({ currentUser, isReplying, setIsReplying, commentId }: AddCo
                 <img
                     src={currentUser.img}
                     alt={currentUser.username}
-                    className="w-8"
+                    className="w-8 h-8"
                 />
 
                 <button
