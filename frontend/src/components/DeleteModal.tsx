@@ -1,7 +1,7 @@
 import React from 'react'
 
 import axios from "axios"
-
+import { useQueryClient, useMutation } from '@tanstack/react-query'
 
 type deleteModalProps = {
     commentId: string
@@ -10,7 +10,10 @@ type deleteModalProps = {
     setCommentId: React.Dispatch<React.SetStateAction<string>>
     setReplyId: React.Dispatch<React.SetStateAction<string>>
 }
+
 const DeleteModal = ({ commentId, replyId, setShouldDelete, setCommentId, setReplyId }: deleteModalProps) => {
+
+    const queryClient = useQueryClient()
 
     const middleOfScreen = window.innerHeight / 2.5;
 
@@ -19,30 +22,33 @@ const DeleteModal = ({ commentId, replyId, setShouldDelete, setCommentId, setRep
         behavior: 'smooth'
     });
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (commentId) {
-            axios.delete(`https://interactive-comments-section-api-an2t.onrender.com/comments/${commentId}`)
-                .then((response) => {
-                    console.log(response.data)
-                    setShouldDelete(false)
-                })
-                .catch((error) => console.log(error))
-
-            setCommentId("")
+            try {
+                const response = await axios.delete(`https://interactive-comments-section-api-an2t.onrender.com/comments/${commentId}`)
+                return response.data
+            } catch (error) {
+                console.error(error)
+            }
         }
 
         else if (replyId) {
-            axios.delete(`https://interactive-comments-section-api-an2t.onrender.com/reply/${replyId}`)
-                .then((response) => {
-                    console.log(response.data)
-                    setShouldDelete(false)
-                })
-                .catch((error) => console.log(error))
-
-            setReplyId("")
+            try {
+                const response = await axios.delete(`https://interactive-comments-section-api-an2t.onrender.com/reply/${replyId}`)
+                return response.data
+            } catch (error) {
+                console.error(error)
+            }
         }
-
     }
+
+    const { mutateAsync: handleDeleteMutation } = useMutation({
+        mutationFn: handleDelete,
+        onSuccess: () => {
+            // Invalidate and refetch
+            queryClient.invalidateQueries({ queryKey: ['comments'] })
+        },
+    })
 
     return (
         <>
@@ -61,7 +67,10 @@ const DeleteModal = ({ commentId, replyId, setShouldDelete, setCommentId, setRep
                     </button>
                     <button
                         className='bg-soft-red text-white p-2 rounded-md px-4'
-                        onClick={handleDelete}
+                        onClick={async () => {
+                            await handleDeleteMutation()
+                            setShouldDelete(false)
+                        }}
                     >
                         YES, DELETE
                     </button>

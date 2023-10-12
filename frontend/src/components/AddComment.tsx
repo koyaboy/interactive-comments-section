@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from "axios"
+import { useQueryClient, useMutation } from '@tanstack/react-query'
 
 
 type User = {
@@ -20,7 +21,9 @@ const AddComment = ({ currentUser, isReplying, setIsReplying, commentId }: AddCo
 
     const [comment, setComment] = useState<string>("")
 
-    const postNewComment = () => {
+    const queryClient = useQueryClient()
+
+    const postNewComment = async () => {
         const newComment = {
             content: comment,
             createdAt: "Just Now",
@@ -28,16 +31,16 @@ const AddComment = ({ currentUser, isReplying, setIsReplying, commentId }: AddCo
             user: currentUser._id
         }
 
-        axios.post("https://interactive-comments-section-api-an2t.onrender.com/comments", newComment)
-            .then((response) => {
-                console.log(response.data);
-                setComment("")
-            })
-
-            .catch((error) => { console.log(error) })
+        try {
+            const response = await axios.post("https://interactive-comments-section-api-an2t.onrender.com/comments", newComment)
+            return response.data
+        }
+        catch (error) {
+            console.log(error)
+        }
     }
 
-    const postNewReply = () => {
+    const postNewReply = async () => {
         const newReply = {
             content: comment,
             createdAt: "Just Now",
@@ -45,17 +48,29 @@ const AddComment = ({ currentUser, isReplying, setIsReplying, commentId }: AddCo
             user: currentUser._id
         }
 
-        axios.post(`https://interactive-comments-section-api-an2t.onrender.com/reply/${commentId}`, newReply)
-            .then((response) => {
-                console.log(response.data);
-                setComment("")
-            })
-
-            .catch((error) => { console.log(error) })
-
-        setIsReplying(false)
+        try {
+            const response = await axios.post(`https://interactive-comments-section-api-an2t.onrender.com/reply/${commentId}`, newReply)
+            return response.data
+        } catch (error) {
+            console.error(error)
+        }
     }
 
+    const { mutateAsync: handlePostReplyMutation } = useMutation({
+        mutationFn: postNewReply,
+        onSuccess: () => {
+            // Invalidate and refetch
+            queryClient.invalidateQueries({ queryKey: ['comments'] })
+        },
+    })
+
+    const { mutateAsync: handlePostCommentMutation } = useMutation({
+        mutationFn: postNewComment,
+        onSuccess: () => {
+            // Invalidate and refetch
+            queryClient.invalidateQueries({ queryKey: ['comments'] })
+        },
+    })
 
     return (
         <div className='bg-white p-4 mt-4 rounded-lg lg:flex lg:relative lg:gap-6 lg:items-start'>
@@ -77,7 +92,27 @@ const AddComment = ({ currentUser, isReplying, setIsReplying, commentId }: AddCo
 
                 <button
                     className='bg-moderate-blue text-white px-6 py-2 rounded-md lg:absolute lg:right-4 hover:cursor-pointer lg:hover:opacity-40'
-                    onClick={isReplying ? postNewReply : postNewComment}
+                    onClick={isReplying ?
+                        async () => {
+                            try {
+                                await handlePostReplyMutation()
+                                setComment("")
+                                setIsReplying(false)
+                            } catch (error) {
+                                console.error(error)
+                            }
+                        }
+                        :
+                        async () => {
+                            try {
+                                await handlePostCommentMutation()
+                                setComment("")
+                            }
+                            catch (error) {
+                                console.error(error)
+                            }
+                        }
+                    }
                 >
                     {isReplying ? "REPLY" : "SEND"}
                 </button>
