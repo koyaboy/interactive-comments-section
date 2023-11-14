@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import Comment from "./components/Comment"
 import AddComment from "./components/AddComment";
+import LoadingScreen from "./components/LoadingScreen";
 import axios from 'axios';
 
 const DeleteModal = React.lazy(() => import('./components/DeleteModal'));
@@ -45,7 +46,6 @@ export default function App() {
   const getComments = async () => {
     try {
       const response = await axios.get("https://interactive-comments-section-api-an2t.onrender.com/comments");
-      console.log("fetched")
       return response.data;
     } catch (error) {
       console.log(error);
@@ -70,7 +70,7 @@ export default function App() {
   })
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <LoadingScreen />
   }
 
   // const handleEdit = (newComment: { _id: string, content: string }) => {
@@ -99,7 +99,6 @@ export default function App() {
       {shouldDelete && <div className="overlay"></div>}
 
       <div className="bg-very-light-gray min-h-screen py-8 px-4 sm:px-16 md:px-36 lg:px-48 xl:px-64">
-
         {currentUser && comments?.map((comment: Comment) => (
           <div key={comment._id}>
             <Comment
